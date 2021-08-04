@@ -1,63 +1,59 @@
-import React from 'react'
+import React, { useState } from "react";
 
-import { NotesList } from './notes-list'
-import { NoteForm } from './note-form'
+import { NotesList } from "./notes-list";
+import { NoteForm } from "./note-form";
 
-export class App extends React.Component {
+function App({ service }) {
+  // // Notes Service Object
+  // this.service = this.props.service;
 
-    constructor(props) {
-        super(props)
+  const [selectedNote, setSelectedNote] = useState({});
 
-        // Notes Service Object
-        this.service = this.props.service;
+  // this.state = {
+  //   notes: [],
+  //   selected: null,
+  // };
 
-        this.state = {
-            notes: [],
-            selected: null
-        }
+  // (!) Get notes from service
 
-    }
+  // Select new empty note
+  function newNote() {}
 
-    // (!) Get notes from service
+  // Set note as selected
+  function onSelect(note) {
+    setSelectedNote(note);
+  }
 
-    // Select new empty note
-    newNote(){
+  // Save note to service
+  function onSubmit(note) {}
 
-    }
+  // Unselect note
+  function onCancel() {}
 
-    // Set note as selected
-    onSelect(note){
-
-    }
-
-    // Save note to service
-    onSubmit(note){
-
-    }
-
-    // Unselect note
-    onCancel(){
-
-    }
-
-    render() {
-        return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-12">
-                        <h1>React notes</h1>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-4">
-                        <NotesList notes={[]} />
-                    </div>
-                    <div className="col-md-8">
-                        <NoteForm />
-                        <div id="new-note"><button>New Note</button></div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12">
+          <h1>React notes</h1>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-4">
+          <NotesList
+            notes={service.notes}
+            onSelect={onSelect}
+            selectedNote={selectedNote}
+          />
+        </div>
+        <div className="col-md-8">
+          <NoteForm />
+          <div id="new-note">
+            <button>New Note</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export { App };

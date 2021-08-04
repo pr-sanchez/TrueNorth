@@ -1,15 +1,52 @@
-import React from 'react'
+import React from "react";
 
-export class NotesList extends React.Component{
+const defaultProps = {
+  notes: [],
+  selectedNote: {},
+  onSelect: () => console.log("onSelect"),
+};
 
-    static defaultProps = {
-        notes: []
+function NotesList({ notes, selectedNote, onSelect }) {
+  function NotesItem({ note }) {
+    function handleNoteClick() {
+      onSelect(note);
     }
 
-    render(){
-        return <div className="list-group">
-            <div className="list-group-item active">Active note example</div>
-            <div className="list-group-item">Inactive note example</div>
-        </div>
+    let className = "list-group-item";
+
+    if (note.id === selectedNote.id) {
+      className = className.concat(" ", "active");
     }
+
+    return (
+      <div className={className} onClick={handleNoteClick}>
+        {note.title}
+      </div>
+    );
+  }
+
+  function renderNotes() {
+    if (notes.length > 0 === false) {
+      return null;
+    }
+
+    const mappedNotes = notes.map((note) => {
+      return (
+        <NotesItem
+          key={note.id}
+          note={note}
+          selectedNote={selectedNote}
+          onSelect={onSelect}
+        />
+      );
+    });
+
+    return mappedNotes;
+  }
+
+  return <div className="list-group">{renderNotes()}</div>;
 }
+
+NotesList.defaultProps = defaultProps;
+
+export { NotesList };
