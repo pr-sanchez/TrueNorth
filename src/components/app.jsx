@@ -4,7 +4,11 @@ import { NotesList } from "./notes-list";
 import { NoteForm } from "./note-form";
 
 function App({ service }) {
-  // // Notes Service Object
+  //  //////////////////////////////////
+  //  //////////////////////////////////
+  //  ///////// PRIVATE METHODS ////////
+  //  //////////////////////////////////
+  //  //////////////////////////////////
 
   const defaultNote = {
     id: "",
@@ -17,7 +21,6 @@ function App({ service }) {
 
   async function getNotes() {
     const notes = await service.getNotes();
-
     setNotes(notes);
   }
 
@@ -26,23 +29,26 @@ function App({ service }) {
     getNotes();
   }, []);
 
-  // Select new empty note
   async function newNote() {
     service.saveNote(defaultNote);
-    const notes = await service.getNotes();
-    setNotes(notes);
 
+    const notes = await service.getNotes();
     const lastNote = notes[notes.length - 1];
 
+    setNotes(notes);
     onSelect(lastNote);
   }
 
-  // Set note as selected
+  //  //////////////////////////////////
+  //  //////////////////////////////////
+  //  //////// EVENT HANDLERS //////////
+  //  //////////////////////////////////
+  //  //////////////////////////////////
+
   function onSelect(note) {
     setSelectedNote(note);
   }
 
-  // Save note to service
   function onSubmit(note) {
     service.saveNote(note);
     getNotes();
@@ -52,10 +58,15 @@ function App({ service }) {
     setSelectedNote({ ...selected, ...note });
   }
 
-  // Unselect note
   function onCancel() {
     setSelectedNote(defaultNote);
   }
+
+  //  //////////////////////////////////
+  //  //////////////////////////////////
+  //  ////////// RENDERERS /////////////
+  //  //////////////////////////////////
+  //  //////////////////////////////////
 
   function renderNewNoteButton() {
     if (selected.id !== "") {
