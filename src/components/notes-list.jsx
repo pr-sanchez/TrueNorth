@@ -2,29 +2,11 @@ import React from "react";
 
 const defaultProps = {
   notes: [],
-  selectedNote: {},
+  selected: {},
   onSelect: () => console.log("onSelect"),
 };
 
-function NotesList({ notes, selectedNote, onSelect }) {
-  function NotesItem({ note }) {
-    function handleNoteClick() {
-      onSelect(note);
-    }
-
-    let className = "list-group-item";
-
-    if (note.id === selectedNote.id) {
-      className = className.concat(" ", "active");
-    }
-
-    return (
-      <div className={className} onClick={handleNoteClick}>
-        {note.title}
-      </div>
-    );
-  }
-
+function NotesList({ notes, selected, onSelect }) {
   function renderNotes() {
     if (notes.length > 0 === false) {
       return null;
@@ -32,12 +14,17 @@ function NotesList({ notes, selectedNote, onSelect }) {
 
     const mappedNotes = notes.map((note) => {
       return (
-        <NotesItem
+        <div
           key={note.id}
-          note={note}
-          selectedNote={selectedNote}
-          onSelect={onSelect}
-        />
+          className={
+            note.id === selected.id
+              ? "list-group-item active"
+              : "list-group-item"
+          }
+          onClick={() => onSelect(note)}
+        >
+          {note.title}
+        </div>
       );
     });
 
@@ -48,5 +35,4 @@ function NotesList({ notes, selectedNote, onSelect }) {
 }
 
 NotesList.defaultProps = defaultProps;
-
 export { NotesList };

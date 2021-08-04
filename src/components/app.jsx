@@ -1,23 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NotesList } from "./notes-list";
 import { NoteForm } from "./note-form";
 
 function App({ service }) {
   // // Notes Service Object
-  // this.service = this.props.service;
 
-  const [selectedNote, setSelectedNote] = useState({});
+  const defaultNote = {
+    id: "",
+    title: "",
+    text: "",
+  };
 
-  // this.state = {
-  //   notes: [],
-  //   selected: null,
-  // };
+  const [notes, setNotes] = useState([]);
+  const [selected, setSelectedNote] = useState(defaultNote);
+
+  async function getNotes() {
+    const notes = await service.getNotes();
+
+    setNotes(notes);
+  }
 
   // (!) Get notes from service
+  useEffect(() => {
+    getNotes();
+  }, []);
 
   // Select new empty note
-  function newNote() {}
+  async function newNote() {
+    service.saveNote(defaultNote);
+    const notes = await service.getNotes();
+    setNotes(notes);
+
+    const lastNote = notes[notes.length - 1];
+
+    onSelect(lastNote);
+  }
 
   // Set note as selected
   function onSelect(note) {
@@ -25,10 +43,31 @@ function App({ service }) {
   }
 
   // Save note to service
-  function onSubmit(note) {}
+  function onSubmit(note) {
+    service.saveNote(note);
+    getNotes();
+  }
+
+  function onChange(note) {
+    setSelectedNote({ ...selected, ...note });
+  }
 
   // Unselect note
-  function onCancel() {}
+  function onCancel() {
+    setSelectedNote(defaultNote);
+  }
+
+  function renderNewNoteButton() {
+    if (selected.id !== "") {
+      return null;
+    }
+
+    return (
+      <div id="new-note">
+        <button onClick={newNote}>New Note</button>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
@@ -39,17 +78,17 @@ function App({ service }) {
       </div>
       <div className="row">
         <div className="col-md-4">
-          <NotesList
-            notes={service.notes}
-            onSelect={onSelect}
-            selectedNote={selectedNote}
-          />
+          <NotesList notes={notes} onSelect={onSelect} selected={selected} />
         </div>
         <div className="col-md-8">
-          <NoteForm />
-          <div id="new-note">
-            <button>New Note</button>
-          </div>
+          <NoteForm
+            note={selected}
+            onSubmit={onSubmit}
+            onChange={onChange}
+            onCancel={onCancel}
+          />
+
+          {renderNewNoteButton()}
         </div>
       </div>
     </div>

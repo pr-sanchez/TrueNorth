@@ -1,32 +1,64 @@
-import React from 'react'
+import React from "react";
 
-export class NoteForm extends React.Component{
+const defaultProps = {
+  note: {
+    title: "",
+    text: "",
+  },
 
-    constructor(props){
-        super(props)
-    }
+  onChange: () => console.log("onChange"),
+  onSubmit: () => console.log("onSubmit"),
+  onCancel: () => console.log("onCancel"),
+};
 
-    static defaultProps = {
-        note: {
-            title:'',
-            text:''
-        }
-    }
+function NoteForm({ note, onChange, onSubmit, onCancel }) {
+  const { title, text } = note;
 
-    render(){
-        return <form>
-            <div className="form-group">
-                <label>Title:</label>
-                <input className="form-control" name="title" />
-            </div>
-            <div className="form-group">
-                <label>Note:</label>
-                <textarea className="form-control" name="text" />
-            </div>
-            <div className="form-group">
-                <input id="cancel-note" type="button" className="btn btn-default pull-right" value="Cancel" />
-                <input id="save-note" type="submit" className="btn btn-default pull-right" value="Save" />
-            </div>
-        </form>
-    }
+  function handleSubmitNote(event) {
+    event.preventDefault();
+    onSubmit(note);
+  }
+
+  return (
+    <form onSubmit={handleSubmitNote}>
+      <div className="form-group">
+        <label>Title:</label>
+        <input
+          className="form-control"
+          name="title"
+          value={title}
+          onChange={(e) => onChange({ title: e.target.value })}
+        />
+      </div>
+
+      <div className="form-group">
+        <label>Note:</label>
+        <textarea
+          className="form-control"
+          name="text"
+          value={text}
+          onChange={(e) => onChange({ text: e.target.value })}
+        />
+      </div>
+
+      <div className="form-group">
+        <input
+          id="cancel-note"
+          type="button"
+          className="btn btn-default pull-right"
+          value="Cancel"
+          onClick={onCancel}
+        />
+        <input
+          id="save-note"
+          type="submit"
+          className="btn btn-default pull-right"
+          value="Save"
+        />
+      </div>
+    </form>
+  );
 }
+
+NoteForm.defaultProps = defaultProps;
+export { NoteForm };
